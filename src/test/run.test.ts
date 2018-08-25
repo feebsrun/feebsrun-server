@@ -2,6 +2,7 @@ import {suite, test} from 'mocha-typescript';
 import {RunModel, IRun, IRunModel, Run} from '../models/run.model';
 import {RunRepository} from '../repositories/run.repository';
 import mongoose = require('mongoose');
+import {ConfigurationManager} from '../config/configuration.manager';
 
 @suite
 class RunTest {
@@ -9,9 +10,11 @@ class RunTest {
     private runRepo: RunRepository;
 
     public static before() {
+        const config = new ConfigurationManager();
+        const dbServer = config.getValue('databaseServer');
+        const dbName = config.getValue('databaseName');
+        
         mongoose.Promise = global.Promise;
-        const dbServer = 'localhost';
-        const dbName = 'rundbtest'
         mongoose.connect(`mongodb://${dbServer}/${dbName}`);
         mongoose.connection.on('error', () => {
             console.log('Mongodb connection error. Please make sure MongoDb is running.');
