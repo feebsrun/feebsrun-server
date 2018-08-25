@@ -15,6 +15,9 @@ import {IRunModel} from './models/run.model';
 // config
 import {ConfigurationManager} from './config/configuration.manager';
 
+// logger
+import {Logger} from './logger/custom.logger';
+
 // The server, itself
 class App {
 
@@ -23,6 +26,8 @@ class App {
 
     private model: IModel;
     private configurationManager: ConfigurationManager;
+
+    private logger: Logger;
 
     // bootstrap the application
     public static bootstrap(): App {
@@ -35,6 +40,7 @@ class App {
         this.app = express(); //run the express instance and store in app
 
         this.configurationManager = new ConfigurationManager();
+        this.logger = new Logger('App');
 
         // Configure application
         this.config();
@@ -63,7 +69,7 @@ class App {
         const dbName = this.configurationManager.getValue('databaseName');
         mongoose.connect(`mongodb://${dbServer}/${dbName}`);
         mongoose.connection.on('error', () => {
-            console.log('Mongodb connection error. Please make sure MongoDb is running.');
+            this.logger.error('Mongodb connection error. Please make sure MongoDb is running.');
             process.exit();
         });
         

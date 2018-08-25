@@ -9,11 +9,12 @@ export interface IConfig{
 export class Config implements IConfig {
     protected databaseName: string;
     protected databaseServer: string;
+    protected logFilePath: string;
 
     constructor() {
         this.databaseName = 'rundb';
         this.databaseServer = '127.0.0.1';
-
+        this.logFilePath = '../logs/runLog.log';
     }
 
     getValue(paramName): string {
