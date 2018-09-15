@@ -3,10 +3,10 @@ import * as bodyParser from 'body-parser'; //used to parse the form data that yo
 import * as path from 'path';
 import  mongoose = require('mongoose');
 import errorHandler = require('errorhandler');
+import {attachControllers} from '@decorators/express';
 
 // routes
-import {IndexRoute} from './routes/index';
-import {RunRoutes} from './routes/run.routes';
+import {RunController} from './controllers/run.controller';
 
 // models
 import {IModel} from './models/model';
@@ -22,11 +22,7 @@ import {Logger} from './logger/custom.logger';
 class App {
 
     public app: express.Application;
-    public runRoutes: RunRoutes = new RunRoutes();
-
-    private model: IModel;
     private configurationManager: ConfigurationManager;
-
     private logger: Logger;
 
     // bootstrap the application
@@ -36,7 +32,6 @@ class App {
 
     // constructor -> set the defaults
     constructor() {
-        this.model = Object(); // initialize to an empty object
         this.app = express(); //run the express instance and store in app
 
         this.configurationManager = new ConfigurationManager();
@@ -64,6 +59,19 @@ class App {
             extended: false
         }));
 
+        this.app.use(function(req, res, next) {
+            // Allow CORS
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+
+            // Disable content caching
+            res.header("Cache-Control", "no-cache, no-store, must-revalidate");
+            res.header("Pragma", "no-cache");
+            res.header("Expires", "0");
+
+            next();
+        });
+
         mongoose.Promise = global.Promise;
         const dbServer = this.configurationManager.getValue('databaseServer');
         const dbName = this.configurationManager.getValue('databaseName');
@@ -85,11 +93,10 @@ class App {
 
     // create and return router
     private routes() {
-        let router: express.Router = express.Router();
+        attachControllers(this.app, [
+            RunController
+        ]);
         
-        IndexRoute.create(router);
-
-        this.app.use(router);
     }
 
 }

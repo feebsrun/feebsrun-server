@@ -10,11 +10,17 @@ export class Config implements IConfig {
     protected databaseName: string;
     protected databaseServer: string;
     protected logFilePath: string;
+    protected jwksUri: string;
+    protected jwtAudience: string;
+    protected jwtIssuer: string;
 
     constructor() {
         this.databaseName = 'rundb';
         this.databaseServer = '127.0.0.1';
         this.logFilePath = '../logs/runLog.log';
+        this.jwksUri = '<MUST--OVERRIDE>';
+        this.jwtAudience = '<MUST--OVERRIDE>';
+        this.jwtIssuer = '<MUST--OVERRIDE>';
     }
 
     getValue(paramName): string {
