@@ -72,6 +72,8 @@ class App {
             next();
         });
 
+        this.app.use(express.static(path.join(__dirname, '../public')));
+
         mongoose.Promise = global.Promise;
         const dbServer = this.configurationManager.getValue('databaseServer');
         const dbName = this.configurationManager.getValue('databaseName');
