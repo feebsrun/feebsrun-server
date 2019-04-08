@@ -99,6 +99,8 @@ class App {
             RunController
         ]);
         
+        // fallback to return the home page
+        this.app.get('*', (req, res) => res.sendFile(path.join(__dirname, '../public/index.html')));
     }
 
 }
