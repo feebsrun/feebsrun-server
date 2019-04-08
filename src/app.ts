@@ -25,11 +25,6 @@ class App {
     private configurationManager: ConfigurationManager;
     private logger: Logger;
 
-    // bootstrap the application
-    public static bootstrap(): App {
-        return new App();
-    }
-
     // constructor -> set the defaults
     constructor() {
         this.app = express(); //run the express instance and store in app
